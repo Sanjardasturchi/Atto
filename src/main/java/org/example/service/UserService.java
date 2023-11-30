@@ -23,4 +23,6 @@ public class UserService {
         boolean result = profileRepository.registration(profile);
         return result;
     }
+
+
 }

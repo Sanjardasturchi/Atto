@@ -11,7 +11,6 @@ public class Main {
         Controller controller=new Controller();
         controller.start();
 
-        Scanner scanner=new Scanner(System.in);
 
     }
 }

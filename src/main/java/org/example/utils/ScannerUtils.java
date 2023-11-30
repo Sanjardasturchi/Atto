@@ -1,5 +1,8 @@
 package org.example.utils;
 
+import org.example.colors.BackgroundColors;
+import org.example.colors.StringColors;
+
 import java.util.Scanner;
 
 public class ScannerUtils {
@@ -7,6 +10,14 @@ public class ScannerUtils {
 
     public String nextLine(String s) {
         System.out.print(s);
+        String str = scanner.nextLine();
+        return str;
+    }
+    public String nextLineWithColor(String s, String backgroundColor, String color) {
+        System.out.println(backgroundColor+color+s+StringColors.ANSI_RESET);
+//        System.out.println(s);
+//        System.out.println(backgroundColor);
+//        System.out.println(color);
         String str = scanner.nextLine();
         return str;
     }

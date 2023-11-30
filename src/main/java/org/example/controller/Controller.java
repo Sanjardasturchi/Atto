@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import org.example.colors.BackgroundColors;
+import org.example.colors.StringColors;
 import org.example.db.DatabaseUtil;
 import org.example.dto.CardDTO;
 import org.example.dto.ProfileDTO;
@@ -9,16 +11,20 @@ import org.example.service.CardService;
 import org.example.service.UserService;
 import org.example.utils.ScannerUtils;
 
+import javax.print.attribute.standard.OutputDeviceAssigned;
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.List;
 
 public class Controller {
+
     static ScannerUtils scanner = new ScannerUtils();
     static UserService userService = new UserService();
     CardService cardService = new CardService();
 
 
     public void start() {
+        System.out.println();
         DatabaseUtil databaseUtil = new DatabaseUtil();
         databaseUtil.createProfileTable();
         databaseUtil.createCardTable();
@@ -41,13 +47,15 @@ public class Controller {
 
     private void registration() {
 
-        String name = scanner.nextLine("Enter name:");
-        String surname = scanner.nextLine("Enter surname:");
+        String name = scanner.nextLine(BackgroundColors.GREEN_BACKGROUND+"Enter name:"+StringColors.ANSI_RESET);
+//        String name = scanner.nextLineWithColor("Enter name:",BackgroundColors.BLUE_BACKGROUND,StringColors.RED);
+
+        String surname = scanner.nextLine(BackgroundColors.GREEN_BACKGROUND+"Enter surname:"+StringColors.ANSI_RESET);
         String phone;
         String password;
         do {
-            phone = scanner.nextLine("Enter phoneNumber: ");
-            password = scanner.nextLine("Enter password: ");
+            phone = scanner.nextLine(BackgroundColors.GREEN_BACKGROUND+"Enter phoneNumber: "+StringColors.ANSI_RESET);
+            password = scanner.nextLine(BackgroundColors.GREEN_BACKGROUND+"Enter password: "+StringColors.ANSI_RESET);
         } while (phone == null || password == null);
 
 
@@ -60,10 +68,10 @@ public class Controller {
 
 
         boolean result = userService.registration(profile);
-        if (result) {
-            System.out.println("Successful 👌👌👌");
+        if (!result) {
+            System.out.println(BackgroundColors.GREEN_BACKGROUND+"Successful 👌👌👌"+StringColors.ANSI_RESET);
         } else {
-            System.out.println("Error registration!!!");
+            System.out.println(BackgroundColors.RED_BACKGROUND+StringColors.BLACK+"Error registration!!!"+StringColors.ANSI_RESET);
         }
 
     }
@@ -72,8 +80,11 @@ public class Controller {
         String phoneNumber = null;
         String password = null;
         do {
-            phoneNumber = scanner.nextLine("Enter phoneNumber: ");
-            password = scanner.nextLine("Enter password: ");
+            phoneNumber = scanner.nextLine(BackgroundColors.GREEN_BACKGROUND+ """
+                    \t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter phoneNumber:  """+StringColors.ANSI_RESET);
+            password = scanner.nextLine(BackgroundColors.GREEN_BACKGROUND+ """
+                    \t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter password:  """+StringColors.ANSI_RESET);
+//            System.out.println();
         } while (phoneNumber == null || password == null);
         ProfileDTO profileDTO = new ProfileDTO();
         profileDTO.setPhone(phoneNumber);
@@ -81,11 +92,15 @@ public class Controller {
 
         ProfileDTO profile = userService.login(profileDTO);
         if (profile == null) {
-            System.out.println("Not found");
+            System.out.println(BackgroundColors.RED_BACKGROUND+ """
+                    \t\t\t\t\t\t\t\t\t\tNot found
+"""+StringColors.ANSI_RESET);
             return;
         } else {
             if (profile.getStatus().equals(Status.NO_ACTIVE)) {
-                System.out.println("Not found");
+                System.out.println(BackgroundColors.RED_BACKGROUND+ """
+                    \t\t\t\t\t\t\t\t\t\tNot found
+"""+StringColors.ANSI_RESET);
                 return;
             }
             if (profile.getProfileRole().equals(ProfileRole.USER)) {
@@ -231,23 +246,76 @@ public class Controller {
 //        Enter cardNumber:
 //        Enter terminal number:
 //        (Transaction with type 'Payment')
+        label:
+        do {
+            System.out.println(BackgroundColors.GREEN_BACKGROUND+"""
+                  * * * * * * * * * * * * *\n* 1. Add Card:          *
+                  * * * * * * * * * * * * *
+                  * 2. Card List:         *
+                  * * * * * * * * * * * * *
+                  * 3. Card Change Status *
+                  * * * * * * * * * * * * *"""+StringColors.ANSI_RESET);
+            int action = getAction();
+            switch (action) {
+                case 1 -> {
+                    String cardNumber;
+                    do {
+                        cardNumber = scanner.nextLine(BackgroundColors.GREEN_BACKGROUND+"Enter the card number: "+StringColors.ANSI_RESET);
+                    }while (cardNumber.trim().isEmpty());
+                    boolean result=cardService.addCard(profile,cardNumber);
+                    if (result) {
+                        System.out.println(BackgroundColors.GREEN_BACKGROUND+"Card added !!!"+StringColors.ANSI_RESET);
+                    }else {
+                        System.out.println(BackgroundColors.RED_BACKGROUND+"Card not added !!!"+StringColors.ANSI_RESET);
+                    }
 
-        System.out.println("""
-                1. Add Card (number) - (cartani profile ga ulab qo'yamiz.) (added_date)
-                //        Enter Card Number:""");
+                }
+                case 2 -> {
+                    List<CardDTO> ownCards = cardService.getOwnCards(profile);
+                    if (ownCards.isEmpty()) {
+                        System.out.println("You have no cards !!!");
+                        continue label;
+                    }
+                    for (CardDTO ownCard : ownCards) {
+                        System.out.println(ownCard);
+                    }
+                }
+                case 3 -> {
+                }
+                case 4 -> {
+                }
+                case 5 -> {
+                }
+                case 6 -> {
+                }
+            }
+        } while (true);
 
 
     }
 
     private int getAction() {
-        int option = scanner.nextInt("Choose action: ");
+        int option = scanner.nextInt(BackgroundColors.GREEN_BACKGROUND+"""
+                
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\tChoose action: """+StringColors.ANSI_RESET);
+//        int option = scanner.nextInt("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tChoose action: ");
+//        System.out.println("");
         return option;
     }
 
     private void showMain() {
-        System.out.println("""
-                1. Login
-                2. Registration:""");
+        System.out.print(BackgroundColors.GREEN_BACKGROUND+"""
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t 1. Login        
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t 2. Registration 
+                """+StringColors.ANSI_RESET);
+
+//        System.out.println(BackgroundColors.GREEN_BACKGROUND+"""
+//                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t* * * * * * * * * *
+//                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t* 1. Login        *
+//                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t* * * * * * * * * *
+//                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t* 2. Registration *
+//                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t* * * * * * * * * *
+//                """+StringColors.ANSI_RESET);
     }
 
 

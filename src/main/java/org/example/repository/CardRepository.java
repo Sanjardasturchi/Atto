@@ -47,7 +47,7 @@ public class CardRepository {
                 card.setExp_date(resultSet.getDate("exp_date").toLocalDate());
                 card.setBalance(resultSet.getDouble("balance"));
                 card.setStatus(Status.valueOf(resultSet.getString("status")));
-                card.setNumber(resultSet.getString("phone"));
+                card.setPhone(resultSet.getString("phone"));
                 card.setCreated_date(resultSet.getTimestamp("created_date").toLocalDateTime());
                 cardList.add(card);
             }
@@ -57,5 +57,24 @@ public class CardRepository {
             e.printStackTrace();
         }
         return cardList;
+    }
+
+    public boolean addCard(String number, String phone) {
+        int res=0;
+        try {
+            Connection connection = DatabaseUtil.getConnection();
+            String sql = "update card set phone=?, status=? where number=?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, phone);
+            preparedStatement.setString(2, Status.ACTIVE.name());
+            preparedStatement.setString(3, number);
+            res = preparedStatement.executeUpdate();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return res!=0;
     }
 }
