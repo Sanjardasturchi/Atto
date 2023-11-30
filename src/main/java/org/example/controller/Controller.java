@@ -66,7 +66,7 @@ public class Controller {
 
 
         boolean result = userService.registration(profile);
-        if (!result) {
+        if (result) {
             System.out.println(BackgroundColors.GREEN_BACKGROUND + "Successful 👌👌👌" + StringColors.ANSI_RESET);
         } else {
             System.out.println(BackgroundColors.RED_BACKGROUND + StringColors.BLACK + "Error registration!!!" + StringColors.ANSI_RESET);
@@ -126,6 +126,7 @@ public class Controller {
             case 2 -> {
             }
             case 3 -> {
+                profileMenu(profile);
             }
             case 4 -> {
             }
@@ -173,6 +174,12 @@ public class Controller {
 //        Enter terminal number:
 //        20. Transaction By Card:
 //        Enter Card number:
+    }
+
+    private void profileMenu(ProfileDTO profile) {
+//                11. Profile List
+//                12. Change Profile Status (by phone)
+        userService.showProfileList();
     }
 
     private void cardMenu(ProfileDTO profile) {
@@ -369,7 +376,7 @@ public class Controller {
     }
 
     private void showMain() {
-        System.out.print(BackgroundColors.GREEN_BACKGROUND + """
+        System.out.print(StringColors.GREEN + """
                 \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t 1. Login        
                 \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t 2. Registration 
                 """ + StringColors.ANSI_RESET);

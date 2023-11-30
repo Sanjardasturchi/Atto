@@ -6,6 +6,7 @@ import org.example.enums.ProfileRole;
 import org.example.enums.Status;
 
 import java.sql.*;
+import java.util.List;
 
 public class ProfileRepository {
 
@@ -58,5 +59,10 @@ public class ProfileRepository {
         }
         return res!=0;
 
+    }
+
+    public List<ProfileDTO> getProfileList() {
+
+        return null;
     }
 }

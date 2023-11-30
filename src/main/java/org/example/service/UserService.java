@@ -4,6 +4,8 @@ import org.example.dto.ProfileDTO;
 import org.example.repository.ProfileRepository;
 import org.example.utils.ScannerUtils;
 
+import java.util.List;
+
 public class UserService {
 
     ScannerUtils scanner = new ScannerUtils();
@@ -25,4 +27,7 @@ public class UserService {
     }
 
 
+    public void showProfileList() {
+        List<ProfileDTO> profiles = profileRepository.getProfileList();
+    }
 }
