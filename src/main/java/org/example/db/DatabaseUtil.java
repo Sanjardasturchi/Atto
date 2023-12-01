@@ -74,7 +74,8 @@ public class DatabaseUtil {
             Connection con = DatabaseUtil.getConnection();
             Statement statement = con.createStatement(); // <3>
             String sql = "   create table if not exists transactions(" +
-                    "        card_number varchar(16)  primary key," +
+                    "        id serial  primary key," +
+                    "        card_number varchar(16) ," +
                     "        amount double precision,   " +
                     "        terminal_code varchar references terminal(code)," +
                     "        transaction_type varchar," +
