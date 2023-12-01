@@ -6,6 +6,7 @@ import org.example.enums.ProfileRole;
 import org.example.enums.Status;
 
 import java.sql.*;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ProfileRepository {
@@ -17,11 +18,11 @@ public class ProfileRepository {
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            preparedStatement.setString(1,profileDTO.getPhone());
-            preparedStatement.setString(2,profileDTO.getPassword());
+            preparedStatement.setString(1, profileDTO.getPhone());
+            preparedStatement.setString(2, profileDTO.getPassword());
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()){
-                ProfileDTO profile=new ProfileDTO();
+            if (resultSet.next()) {
+                ProfileDTO profile = new ProfileDTO();
                 profile.setName(resultSet.getString("name"));
                 profile.setSurname(resultSet.getString("surname"));
                 profile.setPhone(resultSet.getString("phone"));
@@ -40,10 +41,10 @@ public class ProfileRepository {
     }
 
     public boolean registration(ProfileDTO profile) {
-        int res=0;
+        int res = 0;
         try {
-        Connection connection = DatabaseUtil.getConnection();
-        String sql = "insert into profile(name,surname,phone,password,profile_role) values (?,?,?,?,?)";
+            Connection connection = DatabaseUtil.getConnection();
+            String sql = "insert into profile(name,surname,phone,password,profile_role) values (?,?,?,?,?)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -57,12 +58,32 @@ public class ProfileRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return res!=0;
+        return res != 0;
 
     }
 
     public List<ProfileDTO> getProfileList() {
+        List<ProfileDTO> profiles = new LinkedList<>();
+        try {
+            Connection connection = DatabaseUtil.getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("select * from profile");
+            while (resultSet.next()) {
+                ProfileDTO profile = new ProfileDTO();
+                profile.setName(resultSet.getString("name"));
+                profile.setSurname(resultSet.getString("surname"));
+                profile.setPhone(resultSet.getString("phone"));
+                profile.setPassword(resultSet.getString("password"));
+                profile.setCreated_date(resultSet.getTimestamp("created_date").toLocalDateTime());
+                profile.setStatus(Status.valueOf(resultSet.getString("status")));
+                profile.setProfileRole(ProfileRole.valueOf(resultSet.getString("profile_role")));
+                profiles.add(profile);
+            }
+            connection.close();
 
-        return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return profiles;
     }
 }

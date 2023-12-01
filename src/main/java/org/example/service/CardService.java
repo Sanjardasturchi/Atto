@@ -44,8 +44,10 @@ public class CardService {
         List<CardDTO> cardList = getCardList();
         for (CardDTO cardDTO : cardList) {
             if (cardDTO.getExp_date()!=null) {
-                if (cardDTO.getPhone().equals(profile.getPhone())) {
-                    cards.add(cardDTO);
+                if (cardDTO.getPhone()!=null) {
+                    if (cardDTO.getPhone().equals(profile.getPhone())) {
+                        cards.add(cardDTO);
+                    }
                 }
             }
         }
@@ -98,9 +100,9 @@ public class CardService {
         ResponsDTO result = cardRepository.reFill(cardNumber, profile,amount);
 
         if (result.success()){
-            System.out.println(BackgroundColors.YELLOW_BACKGROUND+result.message()+StringColors.ANSI_RESET);
+            System.out.println(StringColors.YELLOW+result.message()+StringColors.ANSI_RESET);
         }else {
-            System.out.println(BackgroundColors.RED_BACKGROUND+result.message()+StringColors.ANSI_RESET);
+            System.out.println(StringColors.RED+result.message()+StringColors.ANSI_RESET);
         }
     }
 
@@ -118,5 +120,32 @@ public class CardService {
             System.out.println(BackgroundColors.RED_BACKGROUND+result.message()+StringColors.ANSI_RESET);
         }
 
+    }
+
+    public void changeProfileStatus(Status status,String phoneNumber) {
+        ResponsDTO result = cardRepository.changeProfileStatus(status, phoneNumber);
+        if (result.success()){
+            System.out.println(StringColors.YELLOW+result.message()+StringColors.ANSI_RESET);
+        }else {
+            System.out.println(StringColors.RED+result.message()+StringColors.ANSI_RESET);
+        }
+    }
+
+    public void changeCardStatusByAdmin(String cardNumber,String status) {
+        ResponsDTO result = cardRepository.changeStatusByAdmin(cardNumber, status);
+        if (result.success()) {
+            System.out.println(StringColors.YELLOW+result.message()+StringColors.ANSI_RESET);
+        }else {
+            System.out.println(StringColors.RED+result.message()+StringColors.ANSI_RESET);
+        }
+    }
+
+    public void deleteCardByAdmin(String cardNumber, String status) {
+        ResponsDTO result = cardRepository.changeStatusByAdmin(cardNumber, status);
+        if (result.success()) {
+            System.out.println(StringColors.YELLOW+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCard deleted"+StringColors.ANSI_RESET);
+        }else {
+            System.out.println(StringColors.RED+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tCard not found"+StringColors.ANSI_RESET);
+        }
     }
 }

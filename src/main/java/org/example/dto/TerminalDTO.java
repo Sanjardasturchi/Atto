@@ -15,6 +15,6 @@ public class TerminalDTO {
     private String code;
     private String address;
     private Status status;
-    private LocalDate created_date;
+    private LocalDate createdDate;
 
 }

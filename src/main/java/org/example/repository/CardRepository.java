@@ -53,7 +53,6 @@ public class CardRepository {
                 card.setCreated_date(resultSet.getTimestamp("created_date").toLocalDateTime());
                 cardList.add(card);
             }
-
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -189,5 +188,58 @@ public class CardRepository {
 
 
         return new ResponsDTO("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tError Fill!!!",false);
+    }
+
+    public ResponsDTO changeProfileStatus(Status status,String phoneNumber) {
+
+        int res=0;
+
+        try {
+            Connection connection = DatabaseUtil.getConnection();
+            String sql = "update profile set status=? where phone=?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, status.name());
+            preparedStatement.setString(2, phoneNumber);
+            res = preparedStatement.executeUpdate();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (res > 0) {
+            return new ResponsDTO("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tDepositing money to the card has been done successfully 👌👌👌", true);
+        }
+
+
+
+
+        return new ResponsDTO("Card not found ",false);
+    }
+
+    public ResponsDTO changeStatusByAdmin(String cardNumber, String status) {
+        int res=0;
+
+        try {
+            Connection connection = DatabaseUtil.getConnection();
+            String sql = "update card set status=? where number=?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, status);
+            preparedStatement.setString(2, cardNumber);
+            res = preparedStatement.executeUpdate();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (res > 0) {
+            return new ResponsDTO("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tSatatus changed 👌👌👌", true);
+        }
+
+
+
+
+        return new ResponsDTO("Card not found ",false);
     }
 }

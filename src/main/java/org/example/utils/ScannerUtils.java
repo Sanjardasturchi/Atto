@@ -14,8 +14,8 @@ public class ScannerUtils {
         String str = scanner.nextLine();
         return str;
     }
-    public String nextLineWithColor(String s, String backgroundColor, String color) {
-        System.out.println(backgroundColor+color+s+StringColors.ANSI_RESET);
+    public String nextLineWithColor(String s, String colorB, String color) {
+        System.out.println(colorB+color+s+StringColors.ANSI_RESET);
         String str = scanner.nextLine();
         return str;
     }
@@ -29,7 +29,8 @@ public class ScannerUtils {
                 scanner.nextLine();
                 break;
             } catch (Exception e) {
-                System.out.println(BackgroundColors.WHITE_BACKGROUND+"Enter only numbers"+StringColors.ANSI_RESET);
+                System.out.println();
+                System.out.println(StringColors.RED+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter only numbers"+StringColors.ANSI_RESET);
                 scanner.nextLine();
             }
         } while (true);
@@ -43,7 +44,7 @@ public class ScannerUtils {
                 System.out.print(s);
                 result = LocalDate.parse(scanner.nextLine());
             } catch (Exception e) {
-                System.out.println(BackgroundColors.WHITE_BACKGROUND + "Please enter the date in the format" + BackgroundColors.RED_BACKGROUND + " \"yyyy-mm-dd\"!" + BackgroundColors.WHITE_BACKGROUND + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + StringColors.ANSI_RESET);
+                System.out.println(StringColors.WHITE + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tPlease enter the date in the format" + StringColors.RED + " \"yyyy-mm-dd\"!" + StringColors.WHITE + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + StringColors.ANSI_RESET);
             }
         }while (result==null);
         return result;
