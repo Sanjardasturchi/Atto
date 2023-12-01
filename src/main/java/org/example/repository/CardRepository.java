@@ -242,4 +242,99 @@ public class CardRepository {
 
         return new ResponsDTO("Card not found ",false);
     }
+
+    public double getCardBalance(String senderCardNumber) {
+        try {
+            Connection connection = DatabaseUtil.getConnection();
+            String sql = "select balance from card where number=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1,senderCardNumber);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+               return resultSet.getDouble("balance");
+            }
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public boolean getMoneyFromCardBalance(double amount,String cardNumber) {
+        int res=0;
+
+        try {
+            Connection connection = DatabaseUtil.getConnection();
+            String sql = "update card set balance=balance-? where number=?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setDouble(1, amount);
+            preparedStatement.setString(2, cardNumber);
+            res = preparedStatement.executeUpdate();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (res > 0) {
+            return true;
+        }
+
+
+        return false;
+    }
+
+    public CardDTO getCardByNumber(String senderCardNumber) {
+        CardDTO card = new CardDTO();
+        try {
+            Connection connection = DatabaseUtil.getConnection();
+            String sql = "select * from card where number=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1,senderCardNumber);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                card.setNumber(resultSet.getString("number"));
+                card.setExp_date(resultSet.getDate("exp_date").toLocalDate());
+                card.setBalance(resultSet.getDouble("balance"));
+                card.setStatus(Status.valueOf(resultSet.getString("status")));
+                card.setPhone(resultSet.getString("phone"));
+                card.setCreated_date(resultSet.getTimestamp("created_date").toLocalDateTime());
+            }
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return card;
+
+    }
+
+    public ResponsDTO setMoneyToCampanyBalance(double money, String cardNumber) {
+        int res=0;
+
+        try {
+            Connection connection = DatabaseUtil.getConnection();
+            String sql = "update card set balance=balance+? where number=?";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setDouble(1, money);
+            preparedStatement.setString(2, cardNumber);
+            res = preparedStatement.executeUpdate();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (res > 0) {
+            return new ResponsDTO("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tPayment done 👌👌👌",true);
+        }
+
+
+        return new ResponsDTO("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tPayment ❌",true);
+    }
 }

@@ -36,6 +36,22 @@ public class ScannerUtils {
         } while (true);
         return number;
     }
+    public double nextDouble(String s) {
+        double number;
+        do {
+            try {
+                System.out.print(s);
+                number = scanner.nextDouble();
+                scanner.nextLine();
+                break;
+            } catch (Exception e) {
+                System.out.println();
+                System.out.println(StringColors.RED+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter only numbers"+StringColors.ANSI_RESET);
+                scanner.nextLine();
+            }
+        } while (true);
+        return number;
+    }
 
     public LocalDate nextLocalDate(String s) {
         LocalDate result=null;

@@ -106,4 +106,29 @@ public class TerminalRepository {
 
 
     }
+
+
+    public TerminalDTO getTerminalByCode(String terminalCode) {
+        TerminalDTO terminal = new TerminalDTO();
+        try {
+            Connection connection = DatabaseUtil.getConnection();
+            Statement statement = connection.createStatement();
+
+            String sql = "select * from terminal";
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            if (resultSet.next()) {
+                terminal.setCode(resultSet.getString("code"));
+                terminal.setAddress(resultSet.getString("address"));
+                terminal.setStatus(Status.valueOf(resultSet.getString("status")));
+                terminal.setCreatedDate(resultSet.getDate("created_date").toLocalDate());
+                return terminal;
+            }
+
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return terminal;
+    }
 }

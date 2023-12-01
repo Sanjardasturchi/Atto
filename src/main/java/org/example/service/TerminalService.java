@@ -65,4 +65,6 @@ public class TerminalService {
             System.out.println(StringColors.RED + responsDTO.message() + StringColors.ANSI_RESET);
         }
     }
+
+
 }
