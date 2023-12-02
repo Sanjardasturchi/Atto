@@ -112,10 +112,11 @@ public class TerminalRepository {
         TerminalDTO terminal = new TerminalDTO();
         try {
             Connection connection = DatabaseUtil.getConnection();
-            Statement statement = connection.createStatement();
 
-            String sql = "select * from terminal";
-            ResultSet resultSet = statement.executeQuery(sql);
+            String sql = "select * from terminal where code=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,terminalCode);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 terminal.setCode(resultSet.getString("code"));

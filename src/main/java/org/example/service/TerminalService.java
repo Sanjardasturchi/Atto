@@ -12,6 +12,12 @@ public class TerminalService {
     TerminalRepository terminalRepository = new TerminalRepository();
 
     public void creatTerminal(TerminalDTO terminal) {
+        TerminalDTO terminal1 = terminalRepository.getTerminalByCode(terminal.getCode());
+        if (terminal1.getAddress() !=null) {
+            System.out.println(StringColors.RED + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tTerminal is already exists"+StringColors.ANSI_RESET);
+            return;
+        }
+
         ResponsDTO responsDTO = terminalRepository.creatTerminal(terminal);
         if (responsDTO.success()) {
             System.out.println(StringColors.BLUE + responsDTO.message() + StringColors.ANSI_RESET);
@@ -34,7 +40,7 @@ public class TerminalService {
                 }
             }
         } else {
-            System.out.println(StringColors.RED + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAny terminals");
+            System.out.println(StringColors.RED + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAny terminals"+StringColors.ANSI_RESET);
         }
     }
 

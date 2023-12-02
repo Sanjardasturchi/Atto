@@ -18,6 +18,7 @@ import java.util.List;
 
 public class Controller {
     private String campanyCardNumber;
+
     public String getCampanyCardNumber() {
         return campanyCardNumber;
     }
@@ -30,7 +31,7 @@ public class Controller {
     static UserService userService = new UserService();
     CardService cardService = new CardService();
     TerminalService terminalService = new TerminalService();
-    TransactionService transactionService=new TransactionService();
+    TransactionService transactionService = new TransactionService();
 
 
     public void start() {
@@ -130,9 +131,9 @@ public class Controller {
     private void adminMenu(ProfileDTO profile) {
         System.out.println();
         if (!profile.getName().trim().isEmpty()) {
-            System.out.println("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tWelcome " + profile.getName()+StringColors.RED+"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tYour status ADMIN"+StringColors.ANSI_RESET);
+            System.out.println("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tWelcome " + profile.getName() + StringColors.RED + "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tYour status ADMIN" + StringColors.ANSI_RESET);
         } else if (!profile.getSurname().trim().isEmpty()) {
-            System.out.println("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tWelcome " + profile.getSurname()+StringColors.RED+"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tYour status ADMIN"+StringColors.ANSI_RESET);
+            System.out.println("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tWelcome " + profile.getSurname() + StringColors.RED + "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tYour status ADMIN" + StringColors.ANSI_RESET);
         }
         do {
             System.out.println();
@@ -153,15 +154,121 @@ public class Controller {
                     profileMenu(profile);
                 }
                 case 4 -> {
-
+                    transactionForAdmin();
                 }
                 case 5 -> {
+                    statistic();
                 }
                 default -> {
                     System.out.println(StringColors.RED + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tWrong input!!!" + StringColors.ANSI_RESET);
                 }
             }
         } while (true);
+    }
+
+    private void statistic() {
+        do {
+        showStatisticMenu();
+            int action = getAction();
+            switch (action){
+                case 0 -> {
+                    return;
+                }
+                case 1 -> {
+                    showTodaysTransactions();
+                }
+                case 2 -> {
+                    sowDailyPayments();
+                }
+                case 3 -> {
+                    showInterimPayments();
+
+                }
+                case 4 -> {
+                    generalBalance();
+                }
+                case 5 -> {
+                    showTransactionByTerminal();
+                }
+                case 6 -> {
+                    showTransactionByCard();
+                }
+
+            }
+        }while (true);
+    }
+
+    private void showTransactionByCard() {
+        String cardNumber = scanner.nextLine(StringColors.GREEN + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter card number: " + StringColors.ANSI_RESET);
+
+        transactionService.showTransactionsByCard(cardNumber);
+    }
+
+    private void showTransactionByTerminal() {
+        String terminalCode = scanner.nextLine(StringColors.GREEN + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter terminal code: " + StringColors.ANSI_RESET);
+
+        transactionService.showTransactionsByTerminal(terminalCode);
+    }
+
+    private void generalBalance() {
+        cardService.showCompanyCardBalance(getCampanyCardNumber());
+    }
+
+    private void sowDailyPayments() {
+        LocalDate localDate = scanner.nextLocalDate(StringColors.GREEN+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter Date:"+StringColors.ANSI_RESET);
+        transactionService.showDailyPayments(localDate);
+
+    }
+
+    private void showInterimPayments() {
+        LocalDate localDate1 = scanner.nextLocalDate(StringColors.GREEN+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter FromDate:"+StringColors.ANSI_RESET);
+        LocalDate localDate2 = scanner.nextLocalDate(StringColors.GREEN+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter ToDate:"+StringColors.ANSI_RESET);
+
+        transactionService.showInterimPayments(localDate1,localDate2);
+    }
+
+    private void showTodaysTransactions() {
+        transactionService.showTodaysTransactions();
+    }
+
+    private void showStatisticMenu() {
+        System.out.println();
+        System.out.println(StringColors.GREEN + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t****** " + StringColors.BLUE + "STATISTIC SETTINGS" + StringColors.GREEN + " *****" + StringColors.ANSI_RESET);
+        System.out.println(StringColors.BLUE + """
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1. Bugungi to'lovlar   -   Today's payments
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t2. Kunlik to'lovlar   -   Daily payments
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t3. Oraliq to'lovlar   -   Interim payments
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t4. Umumiy balance   -   General balance
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t5. Transaction by Terminal
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t6. Transaction By Card
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t0. Exit""" + StringColors.ANSI_RESET);
+    }
+
+    private void transactionForAdmin() {
+        do {
+            showTransactionMenu();
+            int action = getAction();
+            switch (action) {
+                case 0 -> {
+                    return;
+                }
+                case 1 -> {
+                    transactionService.showTransactions();
+                }
+                case 2 -> {
+                    cardService.showCompanyCardBalance(getCampanyCardNumber());
+                }
+            }
+        }while (true);
+    }
+
+    private void showTransactionMenu() {
+        System.out.println();
+        System.out.println(StringColors.GREEN + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t****** " + StringColors.BLUE + "TRANSACTION SETTINGS" + StringColors.GREEN + " *****" + StringColors.ANSI_RESET);
+        System.out.println(StringColors.BLUE + """
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t1. Transaction List
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t2. Company Card Balance
+                \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t0. Exit""" + StringColors.ANSI_RESET);
     }
 
     private void changeCardStatusByAdmin() {
@@ -480,9 +587,9 @@ public class Controller {
 //        (Transaction with type 'Payment')
         System.out.println();
         if (!profile.getName().trim().isEmpty()) {
-            System.out.println("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tWelcome " + profile.getName()+StringColors.ANSI_RESET);
+            System.out.println("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tWelcome " + profile.getName() + StringColors.ANSI_RESET);
         } else if (!profile.getSurname().trim().isEmpty()) {
-            System.out.println("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tWelcome " + profile.getSurname()+StringColors.ANSI_RESET);
+            System.out.println("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tWelcome " + profile.getSurname() + StringColors.ANSI_RESET);
         }
         do {
             showUserMenu();
@@ -525,21 +632,12 @@ public class Controller {
         String cardNumber = scanner.nextLine(StringColors.GREEN + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter the card number: " + StringColors.ANSI_RESET);
         String terminalCode = scanner.nextLine(StringColors.GREEN + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter the terminal code: " + StringColors.ANSI_RESET);
 
-        transactionService.makePayment(cardNumber,terminalCode,getCampanyCardNumber());
+        transactionService.makePayment(cardNumber, terminalCode, getCampanyCardNumber());
 
     }
 
     private void transaction(ProfileDTO profile) {
-        //                6. Transaction
-//        CardNumber, Address, Amount,TransactionDate,Type (oxirgi birinchi ko'rinadi)
-        String senderCardNumber = scanner.nextLine(StringColors.GREEN + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter the sender card number: " + StringColors.ANSI_RESET);
-//        String receivingCardNumber = scanner.nextLine(StringColors.GREEN + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter the receiving card number: " + StringColors.ANSI_RESET);
-        String address = scanner.nextLine(StringColors.GREEN + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter Address: " + StringColors.ANSI_RESET);
-        double amount = scanner.nextDouble(StringColors.GREEN + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tEnter amount: " + StringColors.ANSI_RESET);
-
-        transactionService.makeTransaction(senderCardNumber,address,amount);
-
-
+        transactionService.makeTransaction(profile);
     }
 
     private void reFillCard(ProfileDTO profile) {
