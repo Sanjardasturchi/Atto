@@ -152,4 +152,11 @@ public class CardService {
         }
     }
 
+    public void showCompanyCardBalance(String cardNumber) {
+        CardDTO cardByNumber = cardRepository.getCardByNumber(cardNumber);
+        if (cardByNumber != null) {
+            System.out.println();
+            System.out.println(StringColors.GREEN + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t****** " +StringColors.RED+"Company card balance: "+cardByNumber.getBalance()+StringColors.GREEN + " ****** " +StringColors.ANSI_RESET);
+        }
+    }
 }

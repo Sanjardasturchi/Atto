@@ -4,6 +4,7 @@ import lombok.*;
 import org.example.enums.TransactionType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,5 +17,5 @@ public class TransactionDTO {
     private double amount;
     private String terminal_code;
     private TransactionType transactionType;
-    private LocalDate transactionTime;
+    private LocalDateTime transactionTime;
 }
